@@ -1,5 +1,6 @@
-#!/usr/bin/env ruby -Ilib
+#!/usr/bin/env ruby
 
+$: << 'lib'
 $stderr.sync = $stdout.sync = true
 
 require 'bundler/setup'
