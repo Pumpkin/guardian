@@ -1,15 +1,5 @@
 $: << 'lib'
 
-desc 'Work the job queue'
-task :work do
-  require 'guardian/worker'
-
-  trap('INT')  { exit }
-  trap('TERM') { @worker.stop }
-  @worker = Guardian::Worker.new
-  @worker.start
-end
-
 desc 'Destroy and rebuild production database'
 task :rebuild do
   require 'heroku/auth'
@@ -37,11 +27,11 @@ task :rebuild do
   require 'guardian/bucket'
 
   print 'Scaling down clock... '
-  new_qty = Heroku::Auth.api.post_ps_scale('cl-guardian-test', 'clock', 0).body
+  new_qty = Heroku::Auth.api.post_ps_scale('cl-guardian', 'clock', 0).body
   puts "scaled to #{new_qty}"
 
   print 'Scaling down workers... '
-  new_qty = Heroku::Auth.api.post_ps_scale('cl-guardian-test', 'worker', 0).body
+  new_qty = Heroku::Auth.api.post_ps_scale('cl-guardian', 'worker', 0).body
   puts "scaled to #{new_qty}"
 
   print 'Resetting database... '
@@ -55,10 +45,10 @@ task :rebuild do
   puts 'done'
 
   print 'Scaling up clock... '
-  new_qty = Heroku::Auth.api.post_ps_scale('cl-guardian-test', 'clock', 1).body
+  new_qty = Heroku::Auth.api.post_ps_scale('cl-guardian', 'clock', 1).body
   puts "scaled to #{ new_qty }"
 
   print 'Scaling up workers... '
-  new_qty = Heroku::Auth.api.post_ps_scale('cl-guardian-test', 'worker', 15).body
+  new_qty = Heroku::Auth.api.post_ps_scale('cl-guardian', 'worker', 15).body
   puts "scaled to #{ new_qty }"
 end

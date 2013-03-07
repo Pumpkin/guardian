@@ -1,0 +1,11 @@
+#!/usr/bin/env ruby -Ilib
+
+$stderr.sync = $stdout.sync = true
+
+require 'bundler/setup'
+require 'guardian/worker'
+
+trap('INT')  { exit }
+trap('TERM') { @worker.stop }
+@worker = Guardian::Worker.new
+@worker.start
