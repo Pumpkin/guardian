@@ -1,5 +1,8 @@
-$: << 'lib'
+#!/usr/bin/env ruby -Ilib
 
+$stderr.sync = $stdout.sync = true
+
+require 'bundler/setup'
 require 'clockwork'
 require 'guardian/bucket'
 
@@ -12,7 +15,14 @@ end
 # TODO: Purge old requests
 # every(1.hour, 'purge_old_requests') { Request.purge_old_requests }
 
+trap('INT') do
+  puts "\nExiting"
+  exit
+end
+
 at_exit do
   # TODO: Better error message
   $stderr.puts "Unhandled Error: #{$!.inspect} - #{$@}" if $!
 end
+
+Clockwork.run

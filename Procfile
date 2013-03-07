@@ -1,2 +1,2 @@
-clock:  bundle exec clockwork clock.rb
+clock:  script/clock
 worker: script/work
