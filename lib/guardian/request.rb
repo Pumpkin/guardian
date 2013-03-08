@@ -29,7 +29,7 @@ module Guardian
   class LogLine
     EMPTY   = '-'
     DATE    = /\[[^\]]+\]/
-    QUOTED  = /#{EMPTY}|"[^"]+"/
+    QUOTED  = /"[^"]+"/
     SIMPLE  = /\S+/
     SCANNER = %r{
       ^(?<bucket_owner>#{SIMPLE})\s
@@ -51,9 +51,11 @@ module Guardian
       (?<object_size>#{SIMPLE})\s
       (?<total_time>#{SIMPLE})\s
       (?<turn_around_time>#{SIMPLE})\s
-      (?<referrer>#{QUOTED})\s
-      (?<user_agent>#{QUOTED})\s
-      (?<version_id>#{SIMPLE}).*$
+      (?<referrer>#{EMPTY}|#{QUOTED})\s
+
+      # User agents are frustrating to parse and they're not used anyway so
+      # just ignore it and the version id.
+      .*$
     }x
 
     attr_accessor :bucket, :time, :operation, :key, :http_status,
