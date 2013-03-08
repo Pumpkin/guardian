@@ -11,7 +11,8 @@ module Guardian
     SQL
 
     def self.record_log_line_from_log_file log_file, raw_log_line, logger = $stderr
-      log_line = LogLine.parse(raw_log_line)
+      log_line = LogLine.parse(raw_log_line, logger)
+      return unless log_line
       Database.execute(CREATE_STATEMENT, log_file, log_line.bucket,
                                                    log_line.time,
                                                    log_line.operation,
@@ -67,8 +68,13 @@ module Guardian
       @referrer    = options[:referrer]
     end
 
-    def self.parse line
+    def self.parse line, logger
       match = SCANNER.match(line)
+      unless match
+        log_unparsable_line(line, logger)
+        return
+      end
+
       new(bucket:      match[:bucket],
           time:        parse_time(match[:time]),
           operation:   match[:operation],
@@ -94,6 +100,11 @@ module Guardian
 
     def self.parse_quoted value
       value[1...-1]
+    end
+
+    def self.log_unparsable_line line, logger
+      # TODO: Better error message
+      logger.puts "Parser Error: #{line}".gsub("\n", '[\n]')
     end
   end
 end
