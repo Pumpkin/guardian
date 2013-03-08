@@ -38,7 +38,11 @@ module Guardian
       (?<requestor_id>#{SIMPLE})\s
       (?<operation>#{SIMPLE})\s
       (?<key>#{SIMPLE})\s
-      (?<request_uri>#{QUOTED})\s
+
+      # A request URI may contain a quote. That makes this more
+      # complicated than a simple quoted string.
+      (?<request_uri>#{SIMPLE}\s#{SIMPLE}\s#{SIMPLE})\s
+
       (?<http_status>#{SIMPLE})\s
       (?<error_code>#{SIMPLE})\s
       (?<bytes_sent>#{SIMPLE})\s

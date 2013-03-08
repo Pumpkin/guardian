@@ -83,5 +83,12 @@ LINE
         subject.referrer.should be_nil
       end
     end
+
+    context 'with a request uri containing a quote' do
+      let(:log_line) { <<LINE }
+abc123 bucket-name [03/Feb/2013:20:23:01 +0000] 8.8.8.8 def456 ghi789 REST.GET.OBJECT items/abc123/file.jpg%2522 "GET items/abc123/file.jpg" HTTP/1.1" 403 AccessDenied 231 - 37 - "http://getcloudapp.com" "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.6; en-US; rv:1.9.2) Gecko/20100115 Firefox/3.6 (FlipboardProxy/0.0.5; +http://flipboard.com/browserproxy)" -
+LINE
+      it { should_not be_nil }
+    end
   end
 end
