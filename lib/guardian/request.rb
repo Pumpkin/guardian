@@ -22,7 +22,7 @@ module Guardian
                                                    log_line.referrer)
     rescue PG::Error => e
       # TODO: Better error message
-      logger.puts "#{e.message} - #{raw_log_line}".gsub("\n", '[\n]')
+      logger.puts "#{e.message} #{raw_log_line}".gsub("\n", '[\n]')
     end
   end
 

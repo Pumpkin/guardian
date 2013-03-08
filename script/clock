@@ -22,7 +22,7 @@ trap('TERM') { exit }
 at_exit do
   if $! && !$!.is_a?(SystemExit)
     # TODO: Better error message
-    $stderr.puts "Unhandled Error: #{$!.inspect} - #{$@}"
+    $stderr.puts "Unhandled Error: #{$!.inspect} #{$@}"
   end
 end
 
