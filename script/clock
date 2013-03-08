@@ -16,14 +16,14 @@ end
 # TODO: Purge old requests
 # every(1.hour, 'purge_old_requests') { Request.purge_old_requests }
 
-trap('INT') do
-  puts "\nExiting"
-  exit
-end
+trap('INT')  { exit }
+trap('TERM') { exit }
 
 at_exit do
-  # TODO: Better error message
-  $stderr.puts "Unhandled Error: #{$!.inspect} - #{$@}" if $!
+  if $! && !$!.is_a?(SystemExit)
+    # TODO: Better error message
+    $stderr.puts "Unhandled Error: #{$!.inspect} - #{$@}"
+  end
 end
 
 Clockwork.run
