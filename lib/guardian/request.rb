@@ -82,7 +82,7 @@ module Guardian
           time:        parse_time(match[:time]),
           operation:   match[:operation],
           key:         parse_nullable(match[:key]),
-          http_status: match[:http_status],
+          http_status: parse_nullable(match[:http_status]),
           bytes_sent:  parse_nullable(match[:bytes_sent]),
           referrer:    parse_nullable(parse_quoted(match[:referrer])))
     end

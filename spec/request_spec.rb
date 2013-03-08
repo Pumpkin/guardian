@@ -87,6 +87,15 @@ LINE
       end
     end
 
+    context 'without an http status' do
+      let(:log_line) { <<LINE }
+abc123 bucket-name [03/Feb/2013:20:23:01 +0000] 8.8.8.8 def456 ghi789 REST.GET.OBJECT items/abc123/file.jpg "GET /f.cl.ly/items/abc123/file.jpg?AWSAccessKeyId=ACCESSKEY&Expires=1359926569&Signature=SIGNATURE&response-content-disposition=attachment HTTP/1.1" - - 18946246 18946246 2243335 96 "http://getcloudapp.com" "Mozilla/5.0 (Linux; U; Android 4.1.2; en-gb; GT-I9300 Build/JZO54K) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30" -
+LINE
+      it 'has no http status' do
+        subject.http_status.should be_nil
+      end
+    end
+
     context 'with no bytes sent' do
       let(:log_line) { <<LINE }
 abc123 bucket-name [03/Feb/2013:20:23:01 +0000] 8.8.8.8 def456 ghi789 REST.GET.OBJECT - "GET /f.cl.ly/items/abc123/file.jpg?AWSAccessKeyId=ACCESSKEY&Expires=1359926569&Signature=SIGNATURE&response-content-disposition=attachment HTTP/1.1" 200 - - 18946246 2243335 96 "http://getcloudapp.com" "Mozilla/5.0 (Linux; U; Android 4.1.2; en-gb; GT-I9300 Build/JZO54K) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30" -
