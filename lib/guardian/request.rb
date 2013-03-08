@@ -26,10 +26,29 @@ module Guardian
   end
 
   class LogLine
-    DATE    = /\[([^\]]+)\]/
-    QUOTED  = /"([^"]+)"/
-    SIMPLE  = /(\S+)/
-    SCANNER = /#{DATE}|#{QUOTED}|#{SIMPLE}/
+    DATE    = /\[[^\]]+\]/
+    QUOTED  = /"[^"]+"/
+    SIMPLE  = /\S+/
+    SCANNER = %r{
+      ^(?<bucket_owner>#{SIMPLE})\s
+      (?<bucket>#{SIMPLE})\s
+      (?<time>#{DATE})\s
+      (?<remote_ip>#{SIMPLE})\s
+      (?<requestor>#{SIMPLE})\s
+      (?<requestor_id>#{SIMPLE})\s
+      (?<operation>#{SIMPLE})\s
+      (?<key>#{SIMPLE})\s
+      (?<request_uri>#{QUOTED})\s
+      (?<http_status>#{SIMPLE})\s
+      (?<error_code>#{SIMPLE})\s
+      (?<bytes_sent>#{SIMPLE})\s
+      (?<object_size>#{SIMPLE})\s
+      (?<total_time>#{SIMPLE})\s
+      (?<turn_around_time>#{SIMPLE})\s
+      (?<referrer>#{QUOTED})\s
+      (?<user_agent>#{QUOTED})\s
+      (?<version_id>#{SIMPLE}).*$
+    }x
 
     attr_accessor :bucket, :time, :operation, :key, :http_status,
                   :bytes_sent, :referrer
@@ -45,14 +64,14 @@ module Guardian
     end
 
     def self.parse line
-      parsed = line.scan(SCANNER).flatten.compact
-      new(bucket:      parsed[1],
-          time:        parse_time(parsed[2]),
-          operation:   parsed[6],
-          key:         parse_nullable(parsed[7]),
-          http_status: parsed[9],
-          bytes_sent:  parse_nullable(parsed[11]),
-          referrer:    parse_nullable(parsed[15]))
+      match = SCANNER.match(line)
+      new(bucket:      match[:bucket],
+          time:        parse_time(match[:time]),
+          operation:   match[:operation],
+          key:         parse_nullable(match[:key]),
+          http_status: match[:http_status],
+          bytes_sent:  parse_nullable(match[:bytes_sent]),
+          referrer:    parse_nullable(parse_quoted(match[:referrer])))
     end
 
     # Borrowed from request-log-analyzer
@@ -61,12 +80,16 @@ module Guardian
               'Jul' => '07', 'Aug' => '08', 'Sep' => '09', 'Oct' => '10', 'Nov' => '11', 'Dec' => '12' }
 
     def self.parse_time value
-      DateTime.parse("#{value[7,4]}#{MONTHS[value[3,3]]}#{value[0,2]}#{value[12,2]}#{value[15,2]}#{value[18,2]}",
+      DateTime.parse("#{value[8,4]}#{MONTHS[value[4,3]]}#{value[1,2]}#{value[13,2]}#{value[16,2]}#{value[19,2]}",
                      '%Y%m%d%H%M%S')
     end
 
     def self.parse_nullable value
       value == '-' ? nil : value
+    end
+
+    def self.parse_quoted value
+      value[1...-1]
     end
   end
 end
