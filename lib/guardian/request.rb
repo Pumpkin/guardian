@@ -29,7 +29,7 @@ module Guardian
   class LogLine
     EMPTY   = '-'
     DATE    = /\[[^\]]+\]/
-    QUOTED  = /"[^"]+"/
+    QUOTED  = /#{EMPTY}|"[^"]+"/
     SIMPLE  = /\S+/
     SCANNER = %r{
       ^(?<bucket_owner>#{SIMPLE})\s
