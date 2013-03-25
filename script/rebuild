@@ -50,6 +50,7 @@ print 'Scaling up clock... '
 new_qty = Heroku::Auth.api.post_ps_scale(HEROKU_APP_NAME, 'clock', 1).body
 puts "scaled to #{ new_qty }"
 
+# TODO: Accept worker count as an argument and default to 1.
 print 'Scaling up workers... '
 new_qty = Heroku::Auth.api.post_ps_scale(HEROKU_APP_NAME, 'worker', 15).body
 puts "scaled to #{ new_qty }"
