@@ -52,6 +52,7 @@ module Guardian
     end
   end
 
+  # TODO: Remove magic BUCKET global.
   if ENV['AWS_BUCKET_NAME']
     name   = ENV['AWS_BUCKET_NAME']
     access = ENV['AWS_ACCESS_KEY_ID']
