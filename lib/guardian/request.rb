@@ -102,7 +102,7 @@ module Guardian
     end
 
     def self.parse_quoted value
-      value[1...-1]
+      value[1...-1] if value[0] == '"'
     end
 
     def self.log_unparsable_line line, logger

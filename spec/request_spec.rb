@@ -145,7 +145,9 @@ describe Guardian::LogLine do
 
     context 'without a referrer' do
       let(:referrer) { '-' }
-      it { should_not be_nil }
+      it 'has no referrer' do
+        subject.referrer.should be_nil
+      end
     end
 
     context 'without a user agent' do
