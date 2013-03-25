@@ -62,16 +62,15 @@ the Heroku app's name. This will scale the `clock` and `worker` processes to
 0, rebuild the database, and scale `clock` to 1 and `worker` to 15 in order to
 churn through the backlog.
 
-_TODO: Describe creating a new dataclip._
-
 ```bash
 $ script/rebuild my-app
 ```
 
 ## Reporting
 
-Here's a query that shows the top 50 most trafficked files from the past day.
-The way Amazon fills logs, the last 2 hours of traffic may not be represented.
+[Heroku Dataclips][dataclips] make it easy to generate a bucket activity
+report. Here's a query that shows the top 50 most trafficked files from the
+past day.
 
 ``` sql
 WITH most_trafficked AS (
@@ -88,7 +87,12 @@ FROM most_trafficked
 LIMIT 50;
 ```
 
+**Note:** Don't assume the access logs Amazon provides will be accurate up to
+the minute. The way Amazon delivers access logs, the previous 2 hours may not
+be fully represented.
 
-[s3]: https://console.aws.amazon.com/s3
+
+[s3]:                 https://console.aws.amazon.com/s3
 [enable-logging]:     http://cl.ly/image/0Z2f2u0N3i1e/S3%20Bucket%20Logging.png
 [access-credentials]: https://portal.aws.amazon.com/gp/aws/securityCredentials#access_credentials
+[dataclips]:          https://postgres.heroku.com/dataclips
