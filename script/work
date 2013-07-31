@@ -7,6 +7,14 @@ require 'bundler/setup'
 require 'guardian/worker'
 
 trap('INT')  { exit }
-trap('TERM') { @worker.stop }
+trap('TERM') { @worker.stop; exit }
+
+at_exit do
+  if $! && !$!.is_a?(SystemExit)
+    # TODO: Better error message
+    $stderr.puts "Unhandled Error: #{$!.inspect} #{$@}"
+  end
+end
+
 @worker = Guardian::Worker.new
 @worker.start
