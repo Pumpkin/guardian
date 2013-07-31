@@ -3,8 +3,7 @@ source 'https://rubygems.org'
 gem 'aws-sdk'
 gem 'clockwork'
 gem 'rake'
-gem 'pg'
-gem 'queue_classic'
+gem 'queue_classic', '~> 2.2.1'
 
 group :development do
   gem 'database_cleaner'
