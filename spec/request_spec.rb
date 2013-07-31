@@ -3,30 +3,31 @@ require 'database_helper'
 require 'guardian/request'
 
 describe Guardian::LogLine do
-  let(:logger)   { stub(:logger, puts: nil) }
-  let(:owner) { 'abc123' }
-  let(:bucket_name) { 'bucket-name' }
-  let(:access_time) { '[03/Feb/2013:20:23:01 +0000]' }
-  let(:remote_ip) { '8.8.8.8' }
-  let(:requestor) { 'def456' }
-  let(:request_id) { 'ghi789' }
-  let(:operation) { 'REST.GET.OBJECT' }
-  let(:key) { 'items/abc123/file.jpg' }
-  let(:request_uri) { '"GET /f.cl.ly/items/abc123/file.jpg?AWSAccessKeyId=ACCESSKEY&Expires=1359926569&Signature=SIGNATURE&response-content-disposition=attachment HTTP/1.1"' }
-  let(:http_status) { '200' }
-  let(:error_code) { '-' }
-  let(:bytes_sent) { '18946246' }
-  let(:object_size) { '18946246' }
-  let(:total_time) { '2243335' }
+  let(:logger)           { double(:logger, puts: nil) }
+  let(:owner)            { 'abc123' }
+  let(:bucket_name)      { 'bucket-name' }
+  let(:access_time)      { '[03/Feb/2013:20:23:01 +0000]' }
+  let(:remote_ip)        { '8.8.8.8' }
+  let(:requestor)        { 'def456' }
+  let(:request_id)       { 'ghi789' }
+  let(:operation)        { 'REST.GET.OBJECT' }
+  let(:key)              { 'items/abc123/file.jpg' }
+  let(:request_uri)      { '"GET /f.cl.ly/items/abc123/file.jpg?AWSAccessKeyId=ACCESSKEY&Expires=1359926569&Signature=SIGNATURE&response-content-disposition=attachment HTTP/1.1"' }
+  let(:http_status)      { '200' }
+  let(:error_code)       { '-' }
+  let(:bytes_sent)       { '18946246' }
+  let(:object_size)      { '18946246' }
+  let(:total_time)       { '2243335' }
   let(:turn_around_time) { '96' }
-  let(:referrer) { '"http://getcloudapp.com"' }
-  let(:user_agent) { '"Mozilla/5.0 (Linux; U; Android 4.1.2; en-gb; GT-I9300 Build/JZO54K) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30"' }
-  let(:version_id) { '-' }
-  let(:log_line) {[ owner, bucket_name, access_time, remote_ip, requestor,
-                    request_id, operation, key, request_uri, http_status,
-                    error_code, bytes_sent, object_size, total_time,
-                    turn_around_time, referrer, user_agent, version_id
-                  ].join(' ') }
+  let(:referrer)         { '"http://getcloudapp.com"' }
+  let(:user_agent)       { '"Mozilla/5.0 (Linux; U; Android 4.1.2; en-gb; GT-I9300 Build/JZO54K) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30"' }
+  let(:version_id)       { '-' }
+  let(:log_line)         {[ owner, bucket_name, access_time, remote_ip,
+                            requestor, request_id, operation, key,
+                            request_uri, http_status, error_code, bytes_sent,
+                            object_size, total_time, turn_around_time,
+                            referrer, user_agent, version_id
+                          ].join(' ') }
 
   describe '.record_log_line_from_log_file' do
     subject {

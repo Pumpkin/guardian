@@ -3,7 +3,7 @@ require 'guardian/bucket'
 
 describe Guardian::Bucket do
   describe '.enqueue_processing_new_logs' do
-    let(:queue) { stub :queue, enqueue: nil }
+    let(:queue) { double(:queue, enqueue: nil) }
 
     it 'enqueues a job' do
       queue.should_receive(:enqueue)
@@ -14,9 +14,9 @@ describe Guardian::Bucket do
   end
 
   describe '.process_new_logs' do
-    let(:bucket)   { stub(:bucket, process_new_logs_since: nil) }
-    let(:log)      { stub(:log, last_log_file: log_file) }
-    let(:log_file) { stub :log_file }
+    let(:bucket)   { double(:bucket, process_new_logs_since: nil) }
+    let(:log)      { double(:log, last_log_file: log_file) }
+    let(:log_file) { double :log_file }
     subject { described_class.process_new_logs(bucket, log) }
 
     it 'finds last log file' do
@@ -31,13 +31,13 @@ describe Guardian::Bucket do
   end
 
   describe '#process_new_logs_since' do
-    let(:aws)         { stub(:aws, files_for_bucket_since: files) }
-    let(:files)       {[ stub(:file_one), stub(:file_two) ]}
-    let(:log_file)    { stub(:log_file) }
-    let(:log)         { stub(:log, create: nil) }
-    let(:queue)       { stub :queue, enqueue: nil }
+    let(:aws)         { double(:aws, files_for_bucket_since: files) }
+    let(:files)       {[ double(:file_one), double(:file_two) ]}
+    let(:log_file)    { double(:log_file) }
+    let(:log)         { double(:log, create: nil) }
+    let(:queue)       { double(:queue, enqueue: nil) }
     let(:bucket)      { described_class.new }
-    let(:logger)      { stub(:logger, puts: nil) }
+    let(:logger)      { double(:logger, puts: nil) }
     subject {
       bucket.process_new_logs_since(log_file, log, aws, queue, logger)
     }
@@ -68,8 +68,8 @@ describe Guardian::Bucket do
   end
 
   describe '.process_log_file' do
-    let(:bucket)   { stub(:bucket, process_log_file: nil) }
-    let(:log_file) { stub :log_file }
+    let(:bucket)   { double(:bucket, process_log_file: nil) }
+    let(:log_file) { double(:log_file) }
     subject { described_class.process_log_file(log_file, bucket) }
 
     it 'passes the log file to the bucket' do
@@ -79,10 +79,10 @@ describe Guardian::Bucket do
   end
 
   describe '#process_log_file' do
-    let(:aws)      { stub(:aws, read_file_from_bucket: nil) }
-    let(:log_file) { stub(:log_file) }
-    let(:request)  { stub(:request, record_log_line: nil) }
-    let(:logger)   { stub(:logger, puts: nil) }
+    let(:aws)      { double(:aws, read_file_from_bucket: nil) }
+    let(:log_file) { double(:log_file) }
+    let(:request)  { double(:request, record_log_line: nil) }
+    let(:logger)   { double(:logger, puts: nil) }
     let(:bucket)   { described_class.new }
     subject { bucket.process_log_file(log_file, aws, request, logger) }
 
