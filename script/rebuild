@@ -1,14 +1,5 @@
 #!/usr/bin/env ruby
 
-$: << 'lib'
-$stderr.sync = $stdout.sync = true
-
-require 'bundler/setup'
-require 'heroku/auth'
-require 'heroku/command/base'
-require 'heroku/client/heroku_postgresql'
-require 'heroku/helpers/heroku_postgresql'
-
 usage = 'rebuild <heroku app>'
 HEROKU_APP_NAME = ARGV.shift or abort usage
 
@@ -54,3 +45,15 @@ puts "scaled to #{ new_qty }"
 print 'Scaling up workers... '
 new_qty = Heroku::Auth.api.post_ps_scale(HEROKU_APP_NAME, 'worker', 15).body
 puts "scaled to #{ new_qty }"
+
+
+BEGIN {
+  $: << 'lib'
+  $stderr.sync = $stdout.sync = true
+
+  require 'bundler/setup'
+  require 'heroku/auth'
+  require 'heroku/command/base'
+  require 'heroku/client/heroku_postgresql'
+  require 'heroku/helpers/heroku_postgresql'
+}
