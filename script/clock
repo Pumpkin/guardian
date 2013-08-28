@@ -1,15 +1,6 @@
 #!/usr/bin/env ruby
 
-$: << 'lib'
-$stderr.sync = $stdout.sync = true
-
-require 'bundler/setup'
-require 'clockwork'
-require 'guardian/bucket'
-
-include Clockwork
-
-every(5.minutes, 'queue_new_logs') do
+every 5.minutes, 'queue_new_logs' do
   Guardian::Bucket.enqueue_processing_new_logs
 end
 
@@ -18,14 +9,26 @@ every 1.hour, 'purge_old_requests' do
   $stdout.puts "Purged #{count} requests"
 end
 
-trap('INT')  { exit }
-trap('TERM') { exit }
-
-at_exit do
-  if $! && !$!.is_a?(SystemExit)
-    # TODO: Better error message
-    $stderr.puts "Unhandled Error: #{$!.inspect} #{$@}"
-  end
-end
-
 Clockwork.run
+
+
+BEGIN {
+  $: << 'lib'
+  $stderr.sync = $stdout.sync = true
+
+  trap('INT')  { exit }
+  trap('TERM') { exit }
+
+  at_exit do
+    if $! && !$!.is_a?(SystemExit)
+      # TODO: Better error message
+      $stderr.puts "Unhandled Error: #{$!.inspect} #{$@}"
+    end
+  end
+
+  require 'bundler/setup'
+  require 'clockwork'
+  require 'guardian/bucket'
+
+  include Clockwork
+}
