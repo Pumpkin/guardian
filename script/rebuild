@@ -10,8 +10,12 @@ class ResetDatabase < Heroku::Command::Base
   end
 
   def app()          HEROKU_APP_NAME end
-  def database()     hpg_resolve('DATABASE_URL') end
   def database_url() database.url end
+
+  def database
+    Heroku::Helpers::HerokuPostgresql::Resolver.new(app, api).
+      resolve('DATABASE_URL')
+  end
 end
 
 # Setup the production database before queue_classic is loaded.
