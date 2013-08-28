@@ -10,6 +10,11 @@ module Guardian
       VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id
     SQL
 
+    PURGE_STATEMENT = <<-SQL
+      DELETE FROM requests
+      WHERE time < current_timestamp - ($1)::interval
+    SQL
+
     def self.record_log_line_from_log_file log_file, raw_log_line, logger = $stderr
       log_line = LogLine.parse(raw_log_line, logger)
       return unless log_line
@@ -23,6 +28,10 @@ module Guardian
     rescue PG::Error => e
       # TODO: Better error message
       logger.puts "#{e.message} #{raw_log_line}".gsub("\n", '[\n]')
+    end
+
+    def self.purge_old_requests
+      Database.execute(PURGE_STATEMENT, '5 days')
     end
   end
 

@@ -13,8 +13,10 @@ every(5.minutes, 'queue_new_logs') do
   Guardian::Bucket.enqueue_processing_new_logs
 end
 
-# TODO: Purge old requests
-# every(1.hour, 'purge_old_requests') { Request.purge_old_requests }
+every 1.hour, 'purge_old_requests' do
+  count = Guardian::Request.purge_old_requests
+  $stdout.puts "Purged #{count} requests"
+end
 
 trap('INT')  { exit }
 trap('TERM') { exit }
