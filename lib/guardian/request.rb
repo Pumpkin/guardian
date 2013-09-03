@@ -31,7 +31,7 @@ module Guardian
     end
 
     def self.purge_old_requests
-      Database.execute(PURGE_STATEMENT, '5 days')
+      Database.execute(PURGE_STATEMENT, '3 days')
     end
   end
 
