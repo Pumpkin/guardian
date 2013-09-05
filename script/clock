@@ -5,8 +5,7 @@ every 5.minutes, 'queue_new_logs' do
 end
 
 every 1.hour, 'purge_old_requests' do
-  count = Guardian::Request.purge_old_requests
-  $stdout.puts "Purged #{count} requests"
+  Guardian::Request.purge_old_requests
 end
 
 Clockwork.run
