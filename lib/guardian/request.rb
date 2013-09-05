@@ -30,8 +30,8 @@ module Guardian
       logger.puts "#{e.message} #{raw_log_line}".gsub("\n", '[\n]')
     end
 
-    def self.purge_old_requests
-      Database.execute(PURGE_STATEMENT, '3 days')
+    def self.purge_old_requests(duration = ENV.fetch('DURATION', '3 days'))
+      Database.execute(PURGE_STATEMENT, duration)
     end
   end
 
