@@ -3,6 +3,8 @@
 Guardian imports Amazon S3 access logs into a local Postgres database. Useful
 for reporting on usage and keeping an eye on transfer costs.
 
+Additional information on how Guardian fits into the S3 analysis of Cloudapp can be found [here](https://github.com/cloudapp/engine/wiki/Guardian)
+
 ## Setup
 
 ### Enable bucket logging
